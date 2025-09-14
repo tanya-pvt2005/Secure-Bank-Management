@@ -1,0 +1,5 @@
+package com.securebank.util;
+
+public class HibernateUtil {
+
+}

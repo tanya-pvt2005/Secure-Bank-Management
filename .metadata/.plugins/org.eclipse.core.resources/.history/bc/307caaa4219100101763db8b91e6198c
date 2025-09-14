@@ -1,0 +1,282 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+// Check if user is logged in
+if (session.getAttribute("loggedIn") == null) {
+    response.sendRedirect("index.jsp");
+    return;
+}
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenBank - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-dark: #1b5e20;
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-lighter: #81c784;
+            --primary-lightest: #e8f5e9;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --text-dark: #333333;
+            --text-light: #666666;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-lightest) 0%, var(--white) 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: var(--white);
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-logout {
+            background: #d32f2f;
+        }
+        
+        .btn-logout:hover {
+            background: #b71c1c;
+        }
+        
+        .btn-secondary {
+            background: var(--primary-lightest);
+            color: var(--primary-dark);
+            border: 1px solid var(--primary-light);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary-lighter);
+        }
+        
+        .dashboard-container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-actions {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .users-table th {
+            background-color: var(--primary-lightest);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .users-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .users-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .users-table tr:hover {
+            background-color: var(--primary-lightest);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-view {
+            background: var(--primary-light);
+            color: var(--white);
+        }
+        
+        .btn-edit {
+            background: #ff9800;
+            color: var(--white);
+        }
+        
+        .btn-delete {
+            background: #f44336;
+            color: var(--white);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-light);
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .dashboard-actions {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .users-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+        <div class="header-actions">
+            <span>Welcome, Admin</span>
+            <a href="index.jsp?logout=true" class="btn btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="dashboard-actions">
+            <h2 class="section-title">User Management</h2>
+            <a href="add-user.jsp" class="btn">
+                <i class="fas fa-user-plus"></i> Add New User
+            </a>
+        </div>
+
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Total Balance</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Users will be dynamically populated from database -->
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h3>No Users Found</h3>
+                        <p>Users will appear here once you add them to the database</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Simple confirmation for logout
+        document.querySelector('.btn-logout').addEventListener('click', function(e) {
+            if (!confirm('Are you sure you want to logout?')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
+<%
+// Close database resources if they were opened
+try {
+    if (rs != null) rs.close();
+    if (stmt != null) stmt.close();
+    if (conn != null) conn.close();
+} catch (Exception e) {
+    e.printStackTrace();
+}
+%>

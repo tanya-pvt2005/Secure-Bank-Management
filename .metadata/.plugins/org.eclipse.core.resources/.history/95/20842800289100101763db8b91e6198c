@@ -1,0 +1,19 @@
+package com.securebank.model;
+
+import java.time.LocalDateTime;
+
+public class User {
+	
+	private int id; //db will automatically generate this
+	private String fname;
+	private String lname;
+	private String email;
+	private LocalDateTime createdAt;
+	
+	 public User(String fName, String lName, String email) {
+	        this.fName = fName;
+	        this.lName = lName;
+	        this.email = email;
+	        this.createdAt = LocalDateTime.now();
+	    }
+}

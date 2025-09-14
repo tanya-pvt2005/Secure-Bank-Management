@@ -1,0 +1,67 @@
+package com.securebank.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "users")
+public class User {
+	
+	@Id
+	private int id; //db will automatically generate this
+	
+    @Column(name = "first_name", nullable = false)
+	private String fName;
+    
+    @Column(name = "last_name", nullable = false)
+	private String lName;
+    
+    @Column(nullable = false, unique = true)
+	private String email;
+	
+    @Column(name = "created_at")
+	private LocalDateTime createdAt;
+    
+    public User() {}
+	
+	 public User(int id, String fName, String lName, String email) {
+	        
+		    this.id = id;
+		    this.fName = fName;
+	        this.lName = lName;
+	        this.email = email;
+	        this.createdAt = LocalDateTime.now();
+	}
+
+	 public void setfName(String fName) {
+		 this.fName = fName;
+	 }
+
+	 public void setlName(String lName) {
+		 this.lName = lName;
+	 }
+
+	 public void setId(int id) {
+		 this.id = id;
+	 }
+
+	 public void setEmail(String email) {
+		 this.email = email;
+	 }
+
+	 public int getId() { return id; }
+	    public String getFName() { return fName; }
+	    public String getLName() { return lName; }
+	    public String getEmail() { return email; }
+	    public LocalDateTime getCreatedAt() { return createdAt; }
+	    
+	    @Override
+	    public String toString() {
+	        return fName + " " + lName + " (" + email + ") - Created at: " + createdAt;
+	    }
+
+		
+	}
+
+	
+

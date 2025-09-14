@@ -1,0 +1,86 @@
+package com.securebank.service;
+
+import org.hibernate.Session;
+import com.securebank.model.User;
+import com.securebank.util.HibernateUtil;
+import org.hibernate.Transaction;
+
+public class UserService {
+
+	public void saveUser(User user) {	
+		//Open session
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		
+		try {
+			tx =  session.beginTransaction();
+			//save user
+			session.persist(user);
+			
+			tx.commit();
+			System.out.println("User saved successfully "+user);
+		}catch (Exception e) {
+            if (tx != null) tx.rollback(); // rollback if error
+            e.printStackTrace();
+        } finally {
+            session.close(); // close session
+        }
+	}
+	
+	public void deleteUser(int id) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		
+		try {
+			tx= session.beginTransaction();
+			
+			//get user by ID
+			User user = session.find(User.class, id);
+			if(user!=null) {
+				session.remove(user);
+				System.out.println("User deleted successfully: " + user);
+			}else {
+	            System.out.println("User with id " + id + " not found.");
+
+			}
+			
+			tx.commit();
+		}catch (Exception e) {
+	        if (tx != null) tx.rollback();
+	        e.printStackTrace();
+	    } finally {
+	        session.close();
+	    }
+		
+	}
+	
+	public void updateUser(int id, String newFName, String newLName, String newEmail) {
+	    Session session = HibernateUtil.getSessionFactory().openSession();
+	    Transaction tx = null;
+
+	    try {
+	        tx = session.beginTransaction();
+
+	        User user = session.find(User.class, id); // fetch user
+	        if (user != null) {
+	            user.setFName(newFName);
+	            user.setLName(newLName);
+	            user.setEmail(newEmail);
+	            session.merge(user); // save changes
+	            System.out.println("User updated successfully: " + user);
+	        } else {
+	            System.out.println("User with id " + id + " not found.");
+	        }
+
+	        tx.commit();
+	    } catch (Exception e) {
+	        if (tx != null) tx.rollback();
+	        e.printStackTrace();
+	    } finally {
+	        session.close();
+	    }
+	}
+
+
+	
+}

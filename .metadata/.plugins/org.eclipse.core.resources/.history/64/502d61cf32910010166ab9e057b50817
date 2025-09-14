@@ -1,0 +1,16 @@
+package com.securebank.controller;
+
+import com.securebank.model.User;
+import com.securebank.service.UserService;
+
+public class UserController {
+	
+	private UserService userService = new UserService();
+	
+	 public void createUser(String fName, String lName, String email) {
+	        User user = new User(fName, lName, email);
+	        userService.saveUser(user);
+	}
+	
+
+}

@@ -1,0 +1,123 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    // Initialize login error
+    boolean loginError = false;
+
+    if("POST".equalsIgnoreCase(request.getMethod())){
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        final String DEFAULT_USERNAME = "admin";
+        final String DEFAULT_PASSWORD = "##Admin";
+
+        if(DEFAULT_USERNAME.equals(username) && DEFAULT_PASSWORD.equals(password)){
+            response.sendRedirect("dashboard.jsp"); // relative path works better
+            return; // stop further processing
+        } else {
+            loginError = true;
+        }
+    }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureBank - Modern Banking Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Your existing CSS goes here */
+        /* Only important part changed is login-container visibility */
+        .login-container {
+            display: <%= loginError ? "flex" : "none" %>;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Keep rest of your CSS unchanged */
+    </style>
+</head>
+<body>
+    <!-- Animated background elements -->
+    <ul class="bg-bubbles">
+        <li></li><li></li><li></li><li></li><li></li>
+        <li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-piggy-bank"></i>
+            <h1>SecureBank</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="#" onclick="openLogin(); return false;"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h2>Smart Banking Management</h2>
+        <p>Efficiently manage customers, accounts, and transactions with our simple and secure banking management system designed for financial institutions.</p>
+        <a href="#" onclick="openLogin(); return false;" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Staff Login</a>
+        <img src="img/piggy.png" height="300">
+    </div>
+
+    <div class="features">
+        <!-- Your feature cards go here -->
+    </div>
+
+    <!-- Login Form Container -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-form">
+            <h2><i class="fas fa-lock"></i> Staff Login</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="close-login" onclick="closeLogin()">Cancel</button>
+                    <button type="submit" class="login-btn">Login</button>
+                </div>
+                <% if(loginError) { %>
+                    <p style="color:red; font-weight:bold; margin-top:10px;">
+                        Invalid username or password. Please try again.
+                    </p>
+                <% } %>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Smart Bank Management System. All rights reserved.</p>
+        <p>Secure Banking Technology</p>
+    </footer>
+
+    <script>
+        function openLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+        }
+        function closeLogin() {
+            document.getElementById('loginContainer').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            const loginContainer = document.getElementById('loginContainer');
+            if (event.target === loginContainer) closeLogin();
+        };
+    </script>
+</body>
+</html>

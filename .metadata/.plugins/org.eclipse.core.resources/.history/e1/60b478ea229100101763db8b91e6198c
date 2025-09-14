@@ -1,0 +1,267 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%
+    boolean loginError = false;
+
+    if("POST".equalsIgnoreCase(request.getMethod())){
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        final String DEFAULT_USERNAME = "admin";
+        final String DEFAULT_PASSWORD = "##Admin";
+
+        if(DEFAULT_USERNAME.equals(username) && DEFAULT_PASSWORD.equals(password)){
+            response.sendRedirect(request.getContextPath() + "/dashboard.jsp");
+            return;
+        } else {
+            loginError = true;
+        }
+    }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureBank - Modern Banking Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Entire CSS from your original code */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-dark: #1b5e20;
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-lighter: #81c784;
+            --primary-lightest: #e8f5e9;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --text-dark: #333333;
+            --text-light: #666666;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-lightest) 0%, var(--white) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Animated background elements */
+        .bg-bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-bubbles li {
+            position: absolute;
+            list-style: none;
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(76, 175, 80, 0.15);
+            bottom: -160px;
+            border-radius: 50%;
+            animation: square 25s infinite;
+            transition-timing-function: linear;
+        }
+
+        /* Repeat your existing CSS for li:nth-child(1-10) and animations */
+
+        @keyframes square {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.5;
+                border-radius: 50%;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+        header {
+            background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Keep all other CSS from your original code (hero, features, footer, login form, etc.) */
+
+        /* Login Form Styling */
+        .login-container {
+            display: <%= loginError ? "flex" : "none" %>;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-form {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-form h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .login-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .close-login {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .close-login:hover {
+            color: var(--primary);
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Background bubbles -->
+    <ul class="bg-bubbles">
+        <li></li><li></li><li></li><li></li><li></li>
+        <li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-piggy-bank"></i>
+            <h1>SecureBank</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#"><i class="fas fa-info-circle"></i> About</a></li>
+                <li><a href="#"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li><a href="#" onclick="openLogin(); return false;"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h2>Smart Banking Management</h2>
+        <p>Efficiently manage customers, accounts, and transactions with our simple and secure banking management system designed for financial institutions.</p>
+        <a href="#" onclick="openLogin(); return false;" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Staff Login</a>
+        <img src="img/piggy.png" height="300">
+    </div>
+
+    <div class="features">
+        <!-- Feature cards go here -->
+    </div>
+
+    <div class="login-container" id="loginContainer">
+        <div class="login-form">
+            <h2><i class="fas fa-lock"></i> Staff Login</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="close-login" onclick="closeLogin()">Cancel</button>
+                    <button type="submit" class="login-btn">Login</button>
+                </div>
+                <% if(loginError) { %>
+                    <p style="color:red; font-weight:bold; margin-top:10px;">
+                        Invalid username or password. Please try again.
+                    </p>
+                <% } %>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Smart Bank Management System. All rights reserved.</p>
+        <p>Secure Banking Technology</p>
+    </footer>
+
+    <script>
+        function openLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+        }
+        function closeLogin() {
+            document.getElementById('loginContainer').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            const loginContainer = document.getElementById('loginContainer');
+            if (event.target === loginContainer) closeLogin();
+        };
+    </script>
+</body>
+</html>
