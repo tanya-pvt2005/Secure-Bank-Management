@@ -1,0 +1,138 @@
+package com.securebank;
+
+import java.util.Scanner;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import com.securebank.config.AppConfig;
+import com.securebank.controller.UserController;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+    	
+    	//start spring
+    	AnnotationConfigApplicationContext context =  new AnnotationConfigApplicationContext(AppConfig.class);
+        
+    	//get userController bean
+    	UserController controller = context.getBean(UserController.class);
+    	
+    	Scanner sc = new Scanner(System.in);
+        String adminUser = "admin";   // hardcoded admin username
+        String adminPass = "##Admin"; // hardcoded admin password
+
+        System.out.println("=== Welcome to Bank Management App ===");
+
+        System.out.print("Enter admin username: ");
+        String username = sc.nextLine();
+
+        System.out.print("Enter admin password: ");
+        String password = sc.nextLine();
+
+        if (!adminUser.equals(username) || !adminPass.equals(password)) {
+            System.out.println("Invalid credentials. Exiting...");
+            sc.close();
+            return;
+        }
+
+        System.out.println("Login successful!\n");
+
+        boolean exit = false;
+
+        while (!exit) {
+            System.out.println("=== Admin Menu ===");
+            System.out.println("1. Create User");
+            System.out.println("2. Update User");
+            System.out.println("3. Delete User");
+            System.out.println("4. Create Account for a User");
+            System.out.println("5. Make Transaction");
+            System.out.println("6. View all Users");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+
+            int choice = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            switch (choice) {
+ //-----------------------------------------------------------------------------------------------------------------
+                case 1:
+                    System.out.println("You selected: Create User");
+                    
+                    System.out.print("Enter User ID: ");
+                    int id = sc.nextInt();
+                    sc.nextLine();
+                    
+                    System.out.print("Enter first name: ");
+                    String fName = sc.nextLine();
+
+                    System.out.print("Enter last name: ");
+                    String lName = sc.nextLine();
+
+                    System.out.print("Enter email: ");
+                    String email = sc.nextLine();
+
+                    controller.createUser(id, fName, lName, email);
+                    break;
+//-----------------------------------------------------------------------------------------------------------------
+
+                case 2:
+                    System.out.println("You selected: Update User");
+                    System.out.print("Enter User ID: ");
+                    int updateId = sc.nextInt();
+                    sc.nextLine();
+                    System.out.print("New First Name: ");
+                    String newFName = sc.nextLine();
+                    System.out.print("New Last Name: ");
+                    String newLName = sc.nextLine();
+                    System.out.print("New Email: ");
+                    String newEmail = sc.nextLine();
+
+                    controller.updateUser(updateId, newFName, newLName, newEmail);
+                    break;
+//-----------------------------------------------------------------------------------------------------------------
+
+                case 3:
+                    System.out.println("You selected: Delete User");
+                    System.out.print("Enter User ID: ");
+                    int deleteId = sc.nextInt();
+                    sc.nextLine();
+                    controller.deleteUser(deleteId);
+                    break;
+//-----------------------------------------------------------------------------------------------------------------
+
+                case 4:
+                    System.out.println("You selected: Create Account for User");
+                    // Add account creation logic later
+                    break;
+
+//-----------------------------------------------------------------------------------------------------------------
+                case 5:
+                    System.out.println("You selected: Make Transaction");
+                    // Add transaction logic later
+                    break;
+
+//-----------------------------------------------------------------------------------------------------------------
+
+                case 6:
+                    System.out.println("You selected: View all Users");
+                    System.out.println();
+                    controller.viewAllUsers();
+                    break;
+//-----------------------------------------------------------------------------------------------------------------
+
+                case 7:
+                    System.out.println("Exiting... Goodbye!");
+                    exit = true;
+                    break;
+//-----------------------------------------------------------------------------------------------------------------
+
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+            System.out.println(); // blank line for readability
+        }
+
+        sc.close();
+    }
+}

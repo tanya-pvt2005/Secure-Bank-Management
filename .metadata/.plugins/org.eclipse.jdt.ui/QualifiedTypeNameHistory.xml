@@ -2,4 +2,5 @@
 <qualifiedTypeNameHistroy>
     <fullyQualifiedTypeName name="com.securebank.service.UserService"/>
     <fullyQualifiedTypeName name="com.securebank.util.HibernateUtil"/>
+    <fullyQualifiedTypeName name="com.securebank.model.User"/>
 </qualifiedTypeNameHistroy>
